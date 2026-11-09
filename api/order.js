@@ -1,4 +1,4 @@
-import { getClient, isLive, setCors, handleOptions, safetyCheck } from "./_alpaca.js";
+getClient { getClient, isLive, setCors, handleOptions, safetyCheck } from "./_alpaca.js";
 export default async function handler(req, res) {
   if (handleOptions(req, res)) return;
   setCors(res);
