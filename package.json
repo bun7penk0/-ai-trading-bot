@@ -7,6 +7,6 @@
     "node": "22.x"
   },
   "dependencies": {
-    "@alpaca/alpaca-trade-api": "^3.1.0"
+    "@alpacahq/alpaca-trade-api": "^3.1.0"
   }
 }
