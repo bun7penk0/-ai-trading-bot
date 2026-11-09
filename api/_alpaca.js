@@ -1,4 +1,4 @@
-import Alpaca from "@alpaca/alpaca-trade-api";
+import Alpaca from "@alpacahq/alpaca-trade-api";
 const KEY = process.env.ALPACA_KEY;
 const SECRET = process.env.ALPACA_SECRET;
 const PAPER = process.env.ALPACA_PAPER !== "false";
