@@ -1,0 +1,21 @@
+import { getClient, isLive, setCors, handleOptions, safetyCheck } from "./_alpaca.js";
+export default async function handler(req, res) {
+  if (handleOptions(req, res)) return;
+  setCors(res);
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+  const { symbol, side, qty, type = "market", limitPrice, lastPrice } = req.body || {};
+  if (!symbol || !side || !qty) return res.status(400).json({ error: "Missing symbol / side / qty" });
+  if (!["buy","sell"].includes(String(side).toLowerCase())) return res.status(400).json({ error: "side must be buy or sell" });
+  if (lastPrice != null) {
+    const fail = safetyCheck(symbol, Number(lastPrice));
+    if (fail) return res.status(422).json({ error: fail, blocked: true, mode: isLive ? "LIVE" : "SIM" });
+  }
+  if (!isLive) return res.status(200).json({ mode: "SIM", message: "Alpaca keys not configured — order simulated, not sent", order: { symbol, side, qty, type, status: "simulated" } });
+  try {
+    const client = getClient();
+    const orderParams = { symbol, qty: String(qty), side: String(side).toLowerCase(), type: type === "limit" ? "limit" : "market", time_in_force: "day" };
+    if (type === "limit" && limitPrice != null) orderParams.limit_price = String(limitPrice);
+    const order = await client.createOrder(orderParams);
+    return res.status(200).json({ mode: "LIVE", order });
+  } catch (err) { return res.status(500).json({ error: err.message || "Order failed", mode: "LIVE" }); }
+}
