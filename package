@@ -1,0 +1,12 @@
+{
+  "name": "ai-trading-bot",
+  "version": "0.5.2",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "20.x"
+  },
+  "dependencies": {
+    "@alpaca/alpaca-trade-api": "^3.1.0"
+  }
+}
